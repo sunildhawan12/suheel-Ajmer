@@ -1,108 +1,93 @@
-  let students = [];
 
-    function addStudent() {
-      const name = document.getElementById("name").value;
-      const roll = document.getElementById("roll").value;
-      const math = parseInt(document.getElementById("math").value);
+   let selectedClass = null;
+    let students = [];
 
-      if (!name || !roll || isNaN(math)) {
-        alert("Please fill all fields correctly.");
-        return;
-      }
-
-      const student = calculateResult({ name, roll, math });
-      students.push(student);
-      displayStudents();
-      clearForm();
+    function loadClassData() {
+      selectedClass = document.getElementById("classDropdown").value;
+      document.getElementById("classTitle").innerText = `Class ${selectedClass}`;
+      const stored = localStorage.getItem("class_" + selectedClass);
+      students = stored ? JSON.parse(stored) : [];
+      renderTable();
     }
 
-    function calculateResult(s) {
-      s.total = s.math;
-      s.percent = ((s.math / 100) * 100).toFixed(2);
-      s.grade = s.math >= 90 ? "A" : s.math >= 80 ? "B" : s.math >= 70 ? "C" : s.math >= 33 ? "D" : "F";
-      s.result = s.math >= 33 ? "Pass" : "Fail";
-      return s;
-    }
-
-    function displayStudents() {
-      const table = document.getElementById("recordTable");
-      table.innerHTML = `
-        <tr>
-          <th contenteditable="true">Name</th>
-          <th contenteditable="true">Roll</th>
-          <th contenteditable="true">Math</th>
-          <th contenteditable="true">Total</th>
-          <th contenteditable="true">Percentage</th>
-          <th contenteditable="true">Grade</th>
-          <th contenteditable="true">Result</th>
-          <th class="no-print">Actions</th>
-        </tr>
-      `;
-
-      students.forEach((s, index) => {
-        const row = table.insertRow();
+    function renderTable() {
+      const tbody = document.querySelector("#recordTable tbody");
+      tbody.innerHTML = "";
+      students.forEach((s, i) => {
+        const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${s.name}</td>
-          <td>${s.roll}</td>
-          <td contenteditable="true" onblur="updateMath(${index}, this.innerText)">${s.math}</td>
+          <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)">${s.name}</td>
+          <td contenteditable="true" onblur="updateField(${i}, 'roll', this.innerText)">${s.roll}</td>
+          <td contenteditable="true" onblur="updateMarks(${i})">${s.math}</td>
+        
           <td>${s.total}</td>
           <td>${s.percent}%</td>
           <td>${s.grade}</td>
           <td>${s.result}</td>
-          <td class="actions no-print">
-            <button onclick="editStudent(${index})">Edit</button>
-            <button class="delete" onclick="deleteStudent(${index})">Delete</button>
-          </td>
+          <td class="no-print"><button onclick="deleteStudent(${i})">❌</button></td>
         `;
+        tbody.appendChild(row);
       });
     }
 
-    function updateMath(index, newValue) {
-      const math = parseInt(newValue.trim());
-      if (isNaN(math)) {
-        alert("Invalid number!");
-        displayStudents();
-        return;
-      }
-      students[index].math = math;
-      students[index] = calculateResult(students[index]);
-      displayStudents();
+    function addRow() {
+      const student = {
+        name: "", roll: "", math: 0, computer: 0, science: 0,
+        total: 0, percent: 0, grade: "-", result: "-"
+      };
+      students.push(calculate(student));
+      saveAndRender();
     }
 
-    function editStudent(index) {
-      const s = students[index];
-      document.getElementById("name").value = s.name;
-      document.getElementById("roll").value = s.roll;
-      document.getElementById("math").value = s.math;
-      students.splice(index, 1);
+    function updateField(i, key, value) {
+      students[i][key] = value.trim();
+      saveAndRender();
     }
 
-    function deleteStudent(index) {
-      students.splice(index, 1);
-      displayStudents();
+    function updateMarks(i) {
+      const row = document.querySelectorAll("#recordTable tbody tr")[i];
+      students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
+      students[i].computer = parseInt(row.cells[3].innerText.trim()) || 0;
+      students[i].science = parseInt(row.cells[4].innerText.trim()) || 0;
+      students[i] = calculate(students[i]);
+      saveAndRender();
     }
 
-    function clearForm() {
-      document.getElementById("name").value = "";
-      document.getElementById("roll").value = "";
-      document.getElementById("math").value = "";
+    function calculate(s) {
+      s.total = s.math + s.computer + s.science;
+      s.percent = (s.total / 300 * 100).toFixed(2);
+      s.grade = s.percent >= 90 ? 'A' : s.percent >= 80 ? 'B' : s.percent >= 70 ? 'C' : s.percent >= 33 ? 'D' : 'F';
+      s.result = s.percent >= 33 ? 'Pass' : 'Fail';
+      return s;
+    }
+
+    function deleteStudent(i) {
+      students.splice(i, 1);
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("class_" + selectedClass, JSON.stringify(students));
+      renderTable();
     }
 
     function downloadPDF() {
-      document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+      const container = document.getElementById("pdfContent");
+      const noPrints = container.querySelectorAll('.no-print');
+      noPrints.forEach(el => el.style.display = 'none');
 
-      html2pdf().set({
+      const opt = {
         margin: 0.5,
-        filename: 'Student-Test-Report.pdf',
+        filename: `Class-${selectedClass}-Student-Report.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, scrollY: 0 },
+        html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      }).from(document.getElementById("pdfContent")).save()
-      .then(() => {
-        document.querySelectorAll('.no-print').forEach(el => el.style.display = 'block');
+      };
+
+      html2pdf().set(opt).from(container).save().then(() => {
+        noPrints.forEach(el => el.style.display = 'block');
       });
     }
-
       // Dynamic Greeting
   const now = new Date();
   const hour = now.getHours();
