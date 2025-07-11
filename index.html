@@ -2,61 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Student Record System</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="style.css">
 </head>
-  
-</body>
-<div class="navbar">
-    <div class="logo"> <div class="logo"><img style="height: 50px;width: 50px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt=""></div></div>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <img style="height: 50px;width: 50px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="Logo">
+      
+    </div>
+     <div id="typing" style="color: aqua; font-weight: 800; font-size: 23px; text-align: center;"></div>
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="student.html">Student Records</a></li>
-        <li><a href="porfolio.html">Portfolio</a></li>
-        <li><a href="contact.html">Contact</a></li>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Student Records</a></li>
+      <li><a href="#">Portfolio</a></li>
+      <li><a href="#">Contact</a></li>
     </ul>
-</div>
+  </div>
 
-  <div class="container" id="pdfContent">
+<div class="container" id="pdfContent">
+    <h1 class="no-print" id="greeting"></h1>
    
-    <h1 id="greeting" class="no-print"></h1>
-
-    <div  id="typing" class="no-print" style="color: aqua; font-weight: 800; font-size: 23px; text-align: center;"></div>
-
+  
     <div style="text-align:center">
-      <img class="logo" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="JT Classes Logo">
-      <h1 style="margin-top: -10px; color: tomato;" >JT Classes Ajmer</h1>
-      <h2 style="margin-top: -5px; color: #28a745;">📘 Student Test Report</h2>
-      <div class="class-name" contenteditable="true">Class: 12th Science A</div>
+      <img class="logo" style="height: 150px; width: 150px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="JT Classes Logo">
+      <h1 style="color: tomato; margin-top: -10px;">JT Classes Ajmer</h1>
+      <h2 style="color: #28a745;">📘 Student Test Report</h2>
+
+      <div>
+        <label  style="text-align: center; margin-left: -90px;" class="no-print" for="classDropdown"><strong>📚 Select Class:</strong></label>
+        <select  style="text-align: center; margin-left: 530px; padding: 7px; margin-top: -26px;" class="no-print"  id="classDropdown" onchange="loadClassData()">
+         <option disabled selected>-- Select Class --</option>
+          ${[...Array(12)].map((_, i) => `<option value="- 1th">Class - 1th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 2th">Class - 2th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 3th">Class - 3th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 4th">Class - 4th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 5th">Class - 5th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 6th">Class - 6th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 7th">Class - 7th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 8th">Class - 8th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 9th">Class - 9th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 10th">Class - 10th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 11th">Class - 11th</option>`).join('')}
+          ${[...Array(12)].map((_, i) => `<option value="- 12th">Class - 12th</option>`).join('')}
+        </select>
+      </div>
     </div>
 
-    <div style="text-align:center; margin-bottom: 20px;" class="no-print">
-      <input type="text" id="name" placeholder="Student Name">
-      <input type="text" id="roll" placeholder="Roll No">
-      <input type="number" id="math" placeholder="Math Marks">
-      <button onclick="addStudent()">Add Student</button>
-      <button onclick="downloadPDF()" style="background: #28a745;">⬇️ Download PDF</button>
-    </div>
+    <h2 id="classTitle">Please select a class</h2>
 
     <table id="recordTable">
-      <tr>
-        <th contenteditable="true">Name</th>
-        <th contenteditable="true">Roll</th>
-        <th contenteditable="true">Math</th>
-        <th contenteditable="true">Total</th>
-        <th contenteditable="true">Percentage</th>
-        <th contenteditable="true">Grade</th>
-        <th contenteditable="true">Result</th>
-        <th class="no-print">Actions</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Roll</th>
+          <th contenteditable="true">Math</th>
+          <th>Total</th>
+          <th>%</th>
+          <th>Grade</th>
+          <th>Result</th>
+          <th class="no-print">Actions<br><button style="background: #00b4d8;" onclick="addRow()">➕ Add</button></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
     </table>
+
+    <div style="text-align:center;">
+      <button style="background: #28a745; margin-left: 450px;" class="no-print" onclick="downloadPDF()">⬇️ Download PDF</button>
+    </div>
   </div>
-<footer>
-    <p>&copy; 2025 Student Management System. All Rights Reserved.</p>
-    <p>Designed by [Sunil Dhawan]</p>
-</footer>
+
+  <footer class="no-print">
+    <p style="color: aliceblue;">&copy; 2025 Student Management System. All Rights Reserved. | Designed by Sunil Dhawan</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
