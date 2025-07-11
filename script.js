@@ -16,34 +16,37 @@
     tbody.innerHTML = "";
     students.forEach((s, i) => {
       const row = document.createElement("tr");
-      row.innerHTML = `
-        <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)">${s.name}</td>
-        <td contenteditable="true" onblur="updateField(${i}, 'roll', this.innerText)">${s.roll}</td>
-        <td contenteditable="true" onblur="updateMarks(${i})">${s.math}</td>
-        <td>${s.total}</td>
-        <td>${s.percent}%</td>
-        <td>${s.grade}</td>
-        <td>${s.result}</td>
-        <td class="no-print"><button onclick="deleteStudent(${i})">❌</button></td>
-      `;
+     row.innerHTML = `
+  <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)">${s.name}</td>
+  <td contenteditable="true" onblur="updateField(${i}, 'roll', this.innerText)">${s.roll}</td>
+  <td contenteditable="true" onblur="updateMarks(${i})">${s.math}</td>
+  <td contenteditable="true" onblur="updateMarks(${i})">${s.full}</td>
+  <td>${s.total}</td>
+  <td>${s.percent}%</td>
+  <td>${s.grade}</td>
+  <td>${s.result}</td>
+  <td class="no-print"><button onclick="deleteStudent(${i})">❌</button></td>
+`;
+
       tbody.appendChild(row);
     });
   }
 
-  function addRow() {
-    const student = {
-      name: "",
-      roll: "",
-      math: 0,
-    
-      total: 0,
-      percent: 0,
-      grade: "-",
-      result: "-"
-    };
-    students.push(calculate(student));
-    saveAndRender();
-  }
+ function addRow() {
+  const student = {
+    name: "",
+    roll: "",
+    math: 0,
+    full: 100, // default 100
+    total: 0,
+    percent: 0,
+    grade: "-",
+    result: "-"
+  };
+  students.push(calculate(student));
+  saveAndRender();
+}
+
 
   function updateField(i, key, value) {
     students[i][key] = value.trim();
@@ -51,22 +54,22 @@
   }
 function updateMarks(i) {
   const row = document.querySelectorAll("#recordTable tbody tr")[i];
-  students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
+  students[i].math = parseFloat(row.cells[2].innerText.trim()) || 0;
+  students[i].full = parseFloat(row.cells[3].innerText.trim()) || 100;
   students[i] = calculate(students[i]);
   saveAndRender();
 }
 
-
-  function calculate(student) {
-  student.total = student.math;
-  student.percent = (student.math).toFixed(2);  // Math is out of 100
-  student.grade = student.math >= 90 ? 'A'
-                : student.math >= 80 ? 'B'
-                : student.math >= 70 ? 'C'
-                : student.math >= 33 ? 'D'
-                : 'F';
-  student.result = student.math >= 33 ? 'Pass' : 'Fail';
-  return student;
+function calculate(s) {
+  s.total = s.math;
+  s.percent = ((s.math / s.full) * 100).toFixed(2);
+  s.grade = s.percent >= 90 ? 'A'
+          : s.percent >= 80 ? 'B'
+          : s.percent >= 70 ? 'C'
+          : s.percent >= 33 ? 'D'
+          : 'F';
+  s.result = s.percent >= 33 ? 'Pass' : 'Fail';
+  return s;
 }
 
 
