@@ -35,8 +35,7 @@
       name: "",
       roll: "",
       math: 0,
-      computer: 0,
-      science: 0,
+    
       total: 0,
       percent: 0,
       grade: "-",
@@ -50,23 +49,26 @@
     students[i][key] = value.trim();
     saveAndRender();
   }
+function updateMarks(i) {
+  const row = document.querySelectorAll("#recordTable tbody tr")[i];
+  students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
+  students[i] = calculate(students[i]);
+  saveAndRender();
+}
 
-  function updateMarks(i) {
-    const row = document.querySelectorAll("#recordTable tbody tr")[i];
-    students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
-    students[i].computer = parseInt(row.cells[3].innerText.trim()) || 0;
-    students[i].science = parseInt(row.cells[4].innerText.trim()) || 0;
-    students[i] = calculate(students[i]);
-    saveAndRender();
-  }
 
-  function calculate(s) {
-    s.total = s.math + s.computer + s.science;
-    s.percent = (s.total / 300 * 100).toFixed(2);
-    s.grade = s.percent >= 90 ? 'A' : s.percent >= 80 ? 'B' : s.percent >= 70 ? 'C' : s.percent >= 33 ? 'D' : 'F';
-    s.result = s.percent >= 33 ? 'Pass' : 'Fail';
-    return s;
-  }
+  function calculate(student) {
+  student.total = student.math;
+  student.percent = (student.math).toFixed(2);  // Math is out of 100
+  student.grade = student.math >= 90 ? 'A'
+                : student.math >= 80 ? 'B'
+                : student.math >= 70 ? 'C'
+                : student.math >= 33 ? 'D'
+                : 'F';
+  student.result = student.math >= 33 ? 'Pass' : 'Fail';
+  return student;
+}
+
 
   function deleteStudent(i) {
     students.splice(i, 1);
