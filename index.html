@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Record System</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="navbar">
+    <div class="logo"> <div class="logo"><img style="height: 50px;width: 50px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt=""></div></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="student.html">Student Records</a></li>
+        <li><a href="porfolio.html">Portfolio</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</div>
+
+  <div class="container" id="pdfContent">
+   
+    <h1 id="greeting" class="no-print"></h1>
+
+    <div  id="typing" class="no-print" style="color: aqua; font-weight: 800; font-size: 23px;"></div>
+
+    <div style="text-align:center">
+      <img class="logo" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="JT Classes Logo">
+      <h1 style="margin-top: -10px; color: tomato;" >JT Classes Ajmer</h1>
+      <h2 style="margin-top: -5px; color: #28a745;">📘 Student Test Report</h2>
+      <div class="class-name" contenteditable="true">Class: 12th Science A</div>
+    </div>
+
+    <div style="text-align:center; margin-bottom: 20px;" class="no-print">
+      <input type="text" id="name" placeholder="Student Name">
+      <input type="text" id="roll" placeholder="Roll No">
+      <input type="number" id="math" placeholder="Math Marks">
+      <button onclick="addStudent()">Add Student</button>
+      <button onclick="downloadPDF()" style="background: #28a745;">⬇️ Download PDF</button>
+    </div>
+
+    <table id="recordTable">
+      <tr>
+        <th contenteditable="true">Name</th>
+        <th contenteditable="true">Roll</th>
+        <th contenteditable="true">Math</th>
+        <th contenteditable="true">Total</th>
+        <th contenteditable="true">Percentage</th>
+        <th contenteditable="true">Grade</th>
+        <th contenteditable="true">Result</th>
+        <th class="no-print">Actions</th>
+      </tr>
+    </table>
+  </div>
+<footer>
+    <p>&copy; 2025 Student Management System. All Rights Reserved.</p>
+    <p>Designed by [Sunil Dhawan]</p>
+</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
