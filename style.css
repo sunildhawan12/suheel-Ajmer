@@ -237,3 +237,53 @@ footer p {
     margin: 5px 5px;
   }
 }
+ .no-print {
+  display: inline-block; /* Normal display in browser */
+}
+
+ 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #0077b6;
+      color: white;
+    }
+    td[contenteditable="true"] {
+      background: #f1faff;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f8a;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #555;
+    }
+
+    .no-print {
+      display: block;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+
