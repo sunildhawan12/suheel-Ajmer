@@ -5,7 +5,7 @@
   function loadClassData() {
     selectedClass = document.getElementById("classDropdown").value;
     localStorage.setItem("selectedClass", selectedClass);
-    document.getElementById("classTitle").innerText = `Class ${selectedClass} Student Report`;
+    document.getElementById("classTitle").innerText = `Class ${selectedClass}`;
     const stored = localStorage.getItem("class_" + selectedClass);
     students = stored ? JSON.parse(stored) : [];
     renderTable();
