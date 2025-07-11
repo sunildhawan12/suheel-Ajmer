@@ -1,93 +1,110 @@
 
    let selectedClass = null;
-    let students = [];
+  let students = [];
 
-    function loadClassData() {
-      selectedClass = document.getElementById("classDropdown").value;
-      document.getElementById("classTitle").innerText = `Class ${selectedClass}`;
-      const stored = localStorage.getItem("class_" + selectedClass);
-      students = stored ? JSON.parse(stored) : [];
-      renderTable();
+  function loadClassData() {
+    selectedClass = document.getElementById("classDropdown").value;
+    localStorage.setItem("selectedClass", selectedClass);
+    document.getElementById("classTitle").innerText = `Class ${selectedClass} Student Report`;
+    const stored = localStorage.getItem("class_" + selectedClass);
+    students = stored ? JSON.parse(stored) : [];
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.querySelector("#recordTable tbody");
+    tbody.innerHTML = "";
+    students.forEach((s, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)">${s.name}</td>
+        <td contenteditable="true" onblur="updateField(${i}, 'roll', this.innerText)">${s.roll}</td>
+        <td contenteditable="true" onblur="updateMarks(${i})">${s.math}</td>
+        <td>${s.total}</td>
+        <td>${s.percent}%</td>
+        <td>${s.grade}</td>
+        <td>${s.result}</td>
+        <td class="no-print"><button onclick="deleteStudent(${i})">❌</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function addRow() {
+    const student = {
+      name: "",
+      roll: "",
+      math: 0,
+      computer: 0,
+      science: 0,
+      total: 0,
+      percent: 0,
+      grade: "-",
+      result: "-"
+    };
+    students.push(calculate(student));
+    saveAndRender();
+  }
+
+  function updateField(i, key, value) {
+    students[i][key] = value.trim();
+    saveAndRender();
+  }
+
+  function updateMarks(i) {
+    const row = document.querySelectorAll("#recordTable tbody tr")[i];
+    students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
+    students[i].computer = parseInt(row.cells[3].innerText.trim()) || 0;
+    students[i].science = parseInt(row.cells[4].innerText.trim()) || 0;
+    students[i] = calculate(students[i]);
+    saveAndRender();
+  }
+
+  function calculate(s) {
+    s.total = s.math + s.computer + s.science;
+    s.percent = (s.total / 300 * 100).toFixed(2);
+    s.grade = s.percent >= 90 ? 'A' : s.percent >= 80 ? 'B' : s.percent >= 70 ? 'C' : s.percent >= 33 ? 'D' : 'F';
+    s.result = s.percent >= 33 ? 'Pass' : 'Fail';
+    return s;
+  }
+
+  function deleteStudent(i) {
+    students.splice(i, 1);
+    saveAndRender();
+  }
+
+  function saveAndRender() {
+    localStorage.setItem("class_" + selectedClass, JSON.stringify(students));
+    renderTable();
+  }
+
+  function downloadPDF() {
+    const element = document.getElementById("pdfContent");
+    const noPrints = element.querySelectorAll('.no-print');
+    noPrints.forEach(el => el.style.display = 'none');
+
+    const opt = {
+      margin: 0.5,
+      filename: `Class-${selectedClass}-Student-Report.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      noPrints.forEach(el => el.style.display = 'block');
+    });
+  }
+
+  // ✅ Load last selected class on page load
+  window.addEventListener("DOMContentLoaded", () => {
+    const lastClass = localStorage.getItem("selectedClass");
+    if (lastClass) {
+      document.getElementById("classDropdown").value = lastClass;
+      loadClassData();
     }
+  });
 
-    function renderTable() {
-      const tbody = document.querySelector("#recordTable tbody");
-      tbody.innerHTML = "";
-      students.forEach((s, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)">${s.name}</td>
-          <td contenteditable="true" onblur="updateField(${i}, 'roll', this.innerText)">${s.roll}</td>
-          <td contenteditable="true" onblur="updateMarks(${i})">${s.math}</td>
-        
-          <td>${s.total}</td>
-          <td>${s.percent}%</td>
-          <td>${s.grade}</td>
-          <td>${s.result}</td>
-          <td class="no-print"><button onclick="deleteStudent(${i})">❌</button></td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    function addRow() {
-      const student = {
-        name: "", roll: "", math: 0, computer: 0, science: 0,
-        total: 0, percent: 0, grade: "-", result: "-"
-      };
-      students.push(calculate(student));
-      saveAndRender();
-    }
-
-    function updateField(i, key, value) {
-      students[i][key] = value.trim();
-      saveAndRender();
-    }
-
-    function updateMarks(i) {
-      const row = document.querySelectorAll("#recordTable tbody tr")[i];
-      students[i].math = parseInt(row.cells[2].innerText.trim()) || 0;
-      students[i].computer = parseInt(row.cells[3].innerText.trim()) || 0;
-      students[i].science = parseInt(row.cells[4].innerText.trim()) || 0;
-      students[i] = calculate(students[i]);
-      saveAndRender();
-    }
-
-    function calculate(s) {
-      s.total = s.math + s.computer + s.science;
-      s.percent = (s.total / 300 * 100).toFixed(2);
-      s.grade = s.percent >= 90 ? 'A' : s.percent >= 80 ? 'B' : s.percent >= 70 ? 'C' : s.percent >= 33 ? 'D' : 'F';
-      s.result = s.percent >= 33 ? 'Pass' : 'Fail';
-      return s;
-    }
-
-    function deleteStudent(i) {
-      students.splice(i, 1);
-      saveAndRender();
-    }
-
-    function saveAndRender() {
-      localStorage.setItem("class_" + selectedClass, JSON.stringify(students));
-      renderTable();
-    }
-
-    function downloadPDF() {
-      const container = document.getElementById("pdfContent");
-      const noPrints = container.querySelectorAll('.no-print');
-      noPrints.forEach(el => el.style.display = 'none');
-
-      const opt = {
-        margin: 0.5,
-        filename: `Class-${selectedClass}-Student-Report.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(container).save().then(() => {
-        noPrints.forEach(el => el.style.display = 'block');
-      });
-    }
       // Dynamic Greeting
   const now = new Date();
   const hour = now.getHours();
