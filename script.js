@@ -89,17 +89,19 @@ function calculate(s) {
     noPrints.forEach(el => el.style.display = 'none');
 
     const opt = {
-      margin: 0.5,
-      filename: `Class-${selectedClass}-Student-Report.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        margin: 0.2,
+        filename: `Class-${selectedClass || 'Report'}-Student-Report.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },  // Clearer image, CORS enabled
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }  // Allow breaking content across pages
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-      noPrints.forEach(el => el.style.display = 'block');
+        noPrints.forEach(el => el.style.display = 'block');
     });
-  }
+}
+
 
   // ✅ Load last selected class on page load
   window.addEventListener("DOMContentLoaded", () => {
