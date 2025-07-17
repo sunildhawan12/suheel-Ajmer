@@ -10,7 +10,8 @@
 <body>
   <div class="navbar">
     <div class="logo">
-      <img style="height: 50px;width: 50px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="Logo"> <h2 style="position: absolute; top: 4px;left: 89px; color: #fff;">जगदम्बा क्लासेस</h2>
+      <img style="height: 50px;width: 50px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="Logo"><h2 style="position: absolute; top: 4px;left: 89px; color: #fff;">जगदम्बा क्लासेस</h2> 
+      
     </div>
      <div id="typing" style="color: aqua; font-weight: 800; font-size: 23px; text-align: center;"></div>
     <ul>
@@ -28,27 +29,30 @@
     <div style="text-align:center">
       <img class="logo" style="height: 150px; width: 150px;" src="WhatsApp_Image_2025-05-05_at_14.53.49_b8316be1-removebg-preview.png" alt="JT Classes Logo">
       <h1 style="color: tomato; margin-top: -10px;">JT Classes Ajmer</h1>
+      <div id="pdfContent">
+  
+ 
+
+
       <h2 style="color: #28a745;">📘 Student Test Report</h2>
 
-      <div>
-        <label  style="text-align: center; margin-left: -90px;" class="no-print" for="classDropdown"><strong>📚 Select Class:</strong></label>
-        <select  style="text-align: center; margin-left: 530px; padding: 7px; margin-top: -26px;" class="no-print"  id="classDropdown" onchange="loadClassData()">
+      
+    <label  style="text-align: center; margin-left: -90px;" class="no-print" for="classDropdown"><strong>📚 Select Class:</strong></label>
+      <select style="margin-left: 530px; margin-top: -19px; padding: 5px;" id="classDropdown" class="no-print" onchange="loadClassData()">
          <option disabled selected>-- Select Class --</option>
-          ${[...Array(12)].map((_, i) => `<option value="- 1th">Class - 1th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 2th">Class - 2th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 3th">Class - 3th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 4th">Class - 4th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 5th">Class - 5th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 6th">Class - 6th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 7th">Class - 7th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 8th">Class - 8th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 9th">Class - 9th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 10th">Class - 10th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 11th">Class - 11th</option>`).join('')}
-          ${[...Array(12)].map((_, i) => `<option value="- 12th">Class - 12th</option>`).join('')}
-        </select>
-      </div>
-    </div>
+         <option value="1">Class 1</option>
+         <option value="2">Class 2</option>
+         <option value="3">Class 3</option>
+         <option value="4">Class 4</option>
+         <option value="5">Class 5</option>
+         <option value="6">Class 6</option>
+         <option value="7">Class 7</option>
+         <option value="8">Class 8</option>
+         <option value="9">Class 9</option>
+         <option value="10">Class 10</option>
+         <option value="11">Class 11</option>
+         <option value="12">Class 12</option>
+      </select>
 
     <h2 id="classTitle">Please select a class</h2>
 
@@ -58,7 +62,7 @@
           <th>Name</th>
           <th>Roll</th>
           <th contenteditable="true">Math</th>
-           <th>Full Marks</th>
+          <th>Full Marks</th>
           <th>Total</th>
           <th>%</th>
           <th>Grade</th>
@@ -68,13 +72,14 @@
       </thead>
       <tbody></tbody>
     </table>
+</div>
 
     <div style="text-align:center;">
       <button style="background: #28a745; margin-left: 450px;" class="no-print" onclick="downloadPDF()">⬇️ Download PDF</button>
     </div>
   </div>
 
-  <footer class="no-print">
+  <footer class="no-print" style="display: flex; justify-content: center; align-items: center;">
     <p style="color: aliceblue;">&copy; 2025 Student Management System. All Rights Reserved. | Designed by Sunil Dhawan</p>
   </footer>
 
