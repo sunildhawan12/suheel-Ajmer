@@ -103,13 +103,12 @@ img.logo {
 .actions button.delete {
   background-color: #e63946;
 }
-
-footer {
-  background: #007BFF;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: 30px;
+footer{
+  background-color: #0077b6;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 footer p {
@@ -122,9 +121,31 @@ footer p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #007BFF;
+  
   padding: 15px 30px;
   flex-wrap: wrap;
+    margin: 0;
+      font-family: sans-serif;
+     
+     
+      background-image: linear-gradient(
+      to left bottom,#00aeef,#00aeef,#2778e8f5,#00aeef,#00aeef,#2778e8f5,#00aeef,#00aeef);
+      animation: contact21 5s infinite cubic-bezier(0.62, 0.28, 0.23, 0.99);
+      background-size: 400%;
+    }
+
+     @keyframes contact21 {
+      0% {
+        background-position: 0% 50%;
+        }
+
+    50% {
+       background-position: 100% 50%;
+       }
+  100% {
+      background-position: 0% 50%;
+     }
+   
 }
 
 .navbar .logo {
@@ -286,4 +307,14 @@ footer p {
         display: none !important;
       }
     }
+
+   #recordTable {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: auto;
+  }
+  #recordTable tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
 
